@@ -3,6 +3,9 @@
 import express,{Express,Response,Request} from 'express';
 import dotenv from 'dotenv';
 import connectDB from './config/db.config';
+
+import userRoutes from './routes/user.routes'
+
 dotenv.config()
 
 const app:Express = express();
@@ -12,6 +15,9 @@ app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 
 connectDB();
+
+//Routes
+app.use('/api/user',userRoutes);
 
 app.get('/', (req:Request, res:Response) => {
   res.send('Express + TypeScript Server');
