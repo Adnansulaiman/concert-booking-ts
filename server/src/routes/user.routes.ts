@@ -1,7 +1,6 @@
 import express from 'express';
-import { deleteAUser, getAllUser, getAUser, updateAUser } from '../controllers/user.controllers';
-
 const router = express.Router();
+import { deleteAUser, getAllUser, getAUser, updateAUser } from '../controllers/user.controllers';
 
 
 router.get('/',getAllUser);

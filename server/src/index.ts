@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import connectDB from './config/db.config';
 
 import userRoutes from './routes/user.routes'
+import authRoutes from './routes/auth.routes'
 
 dotenv.config()
 
@@ -18,6 +19,7 @@ connectDB();
 
 //Routes
 app.use('/api/user',userRoutes);
+app.use('/api/auth',authRoutes);
 
 app.get('/', (req:Request, res:Response) => {
   res.send('Express + TypeScript Server');
