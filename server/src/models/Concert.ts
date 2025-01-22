@@ -36,4 +36,5 @@ const concertSchema =new Schema<IConcert>({
     },
 },{timestamps:true})
 
-module.exports = model<IConcert>('Concert',concertSchema);
+const Concert = model<IConcert>('Concert',concertSchema);
+export default Concert;

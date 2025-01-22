@@ -6,6 +6,7 @@ import connectDB from './config/db.config';
 
 import userRoutes from './routes/user.routes'
 import authRoutes from './routes/auth.routes'
+import concertRoutes from './routes/concert.routes'
 
 dotenv.config()
 
@@ -20,6 +21,7 @@ connectDB();
 //Routes
 app.use('/api/user',userRoutes);
 app.use('/api/auth',authRoutes);
+app.use('/api/concert',concertRoutes);
 
 app.get('/', (req:Request, res:Response) => {
   res.send('Express + TypeScript Server');
