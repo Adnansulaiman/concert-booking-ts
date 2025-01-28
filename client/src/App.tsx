@@ -1,13 +1,22 @@
 
+import { Route, Routes } from 'react-router-dom'
 import './App.css'
-import { Button } from './components/ui/button'
+import Home from './pages/Home/Home'
+import Navbar from './components/Navbar/Navbar'
+// import { Button } from './components/ui/button'
 
 function App() {
 
   return (
     <>
-      <h1>Hello world</h1>
-      <Button>Click me</Button>
+    <div className="font-oswald">
+    <Navbar />
+
+    <Routes >
+      <Route path='/' element={<Home />} />
+     </Routes>
+
+     </div>
     </>
   )
 }
