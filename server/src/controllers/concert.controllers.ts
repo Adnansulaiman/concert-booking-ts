@@ -98,3 +98,16 @@ export const deleteAConcert = async (
       .json({ message: "An error occured while deleting concert", error });
   }
 };
+
+
+// //Book a concert 
+// export const bookAConcert = async(req:Request,res:Response):Promise<void> =>{
+//   const {concert_id,quantity} = req.body;
+//   try{
+//     const concert = await Concert.findById(concert_id);
+    
+//   }catch(error){
+//     console.error("Failed to book a concert : ",error);
+//     res.status(500).json({message:"An error occured while booking a concert",error});
+//   }
+// }
