@@ -68,10 +68,10 @@ const Navbar = () => {
               </NavLink>
             </ul>
             <div className="flex gap-5 items-center justify-center">
-              <Button className="text-base bg-transparent">LOGIN</Button>
-              <Button className="text-base bg-transparent border  px-8 py-5 rounded-full">
+              <Link to='/login'><Button className="text-base bg-transparent">LOGIN</Button></Link>
+              <Link to='/register'><Button className="text-base bg-transparent border  px-8 py-5 rounded-full">
                 REGISTER
-              </Button>
+              </Button></Link>
             </div>
           </div>
         </div>
@@ -85,10 +85,10 @@ const Navbar = () => {
           </div>
 
           <div className="flex gap-5 items-center justify-center">
-            <Button className="text-base bg-transparent">LOGIN</Button>
-            <Button className="text-base bg-transparent border rounded-full px-8 py-5">
+            <Link to='/login'><Button className="text-base bg-transparent">LOGIN</Button></Link>
+            <Link to='/register'><Button className="text-base bg-transparent border rounded-full px-8 py-5">
               REGISTER
-            </Button>
+            </Button></Link>
           </div>
           <div className="flex">
             <GiHamburgerMenu
@@ -97,10 +97,10 @@ const Navbar = () => {
             />
           </div>
         </div>
-      </div>
+      
       {menuOpen && (
         <div
-          className={`absolute text-white top-0 right-0 flex flex-col bg-slate-950 w-screen h-screen z-50 ${
+          className={`absolute text-white top-0 right-0 flex flex-col bg-[#0b0b0b] w-screen h-screen z-50 ${
             closing ? "animate-slideoutright" : "animate-slideinright"
           }   `}
         >
@@ -163,6 +163,7 @@ const Navbar = () => {
           </div>
         </div>
       )}
+      </div>
     </>
   );
 };
