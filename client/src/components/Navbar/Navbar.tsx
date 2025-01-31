@@ -69,7 +69,7 @@ const Navbar = () => {
             </ul>
             <div className="flex gap-5 items-center justify-center">
               <Button className="text-base bg-transparent">LOGIN</Button>
-              <Button className="text-base bg-transparent border rounded-none px-6 py-5">
+              <Button className="text-base bg-transparent border  px-8 py-5 rounded-full">
                 REGISTER
               </Button>
             </div>
@@ -86,7 +86,7 @@ const Navbar = () => {
 
           <div className="flex gap-5 items-center justify-center">
             <Button className="text-base bg-transparent">LOGIN</Button>
-            <Button className="text-base bg-transparent border rounded-none px-6 py-5">
+            <Button className="text-base bg-transparent border rounded-full px-8 py-5">
               REGISTER
             </Button>
           </div>
