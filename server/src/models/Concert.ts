@@ -1,40 +1,60 @@
 // const mongoose = require("mongoose")
-import {Schema,model} from "mongoose";
+import mongoose,{Schema,Document} from "mongoose";
 
-interface IConcert {
-    concert_name:string,
-    venue:string,
-    date:string,
+interface IConcert extends Document {
+    title:string,
+    artist:string,
+    date:Date,
     time:string,
-    ticket_price:number,
-    available_tickets?:number,
+    venue: {
+        name: string;
+        address: string;
+        city: string;
+        state: string;
+        country: string;
+        zipcode: string;
+    };
+    ticketTypes: {
+        type: 'General' | 'VIP' | 'VVIP';
+        price: number;
+        availableTickets: number;
+        totalTickets: number;
+    }[];
+    categories: string[];
+    description: string;
+    image: string;
+    // isFeatured: boolean;
+    // createdAt: Date;   
 }
-const concertSchema =new Schema<IConcert>({
-    concert_name:{
-        type:String,
-        required:true
-    },
-    venue:{
-        type:String,
-        required:true
-    },
-    date:{
-        type:String,
-        required:true
-    },
-    time:{
-        type:String,
-        required:true
-    },
-    ticket_price:{
-        type:Number,
-        required:true
-    },
-    available_tickets:{
-        type:Number,
-        required:true
-    },
-},{timestamps:true})
 
-const Concert = model<IConcert>('Concert',concertSchema);
+// Define the Mongoose schema
+const concertSchema = new Schema<IConcert>({
+    title: { type: String, required: true, trim: true },
+    artist: { type: String, required: true, trim: true },
+    date: { type: Date, required: true },
+    time: { type: String, required: true },
+    venue: {
+        name: { type: String, required: true },
+        address: { type: String, required: true },
+        city: { type: String, required: true },
+        state: { type: String, required: true },
+        country: { type: String, required: true },
+        zipcode: { type: String, required: true }
+    },
+    ticketTypes: [
+        {
+            type: { type: String, enum: ['General', 'VIP', 'VVIP'], required: true },
+            price: { type: Number, required: true },
+            availableTickets: { type: Number, required: true, min: 0 },
+            totalTickets: { type: Number, required: true, min: 1 }
+        }
+    ],
+    categories: { type: [String], required: true },
+    description: { type: String, required: true },
+    image: { type: String },
+    // isFeatured: { type: Boolean, default: false },
+    // createdAt: { type: Date, default: Date.now }
+},{timestamps:true});
+
+const Concert = mongoose.model<IConcert>('Concert',concertSchema);
 export default Concert;
