@@ -1,5 +1,6 @@
 import User from "../models/User";
 import { Request, Response } from "express";
+import { UserRequest } from "../types/express";
 
 export const getAllUser = async (
   req: Request,
@@ -16,48 +17,47 @@ export const getAllUser = async (
   }
 };
 
-export const getAUser = async (req: Request, res: Response): Promise<void> => {
-  const { id } = req.params;
+export const getUserDetails = async (req:UserRequest, res:Response):Promise<void> => {
   try {
-    const user = await User.findById(id);
+    const user = await User.findById(req.user?.id);
     if (!user) {
       res.status(404).json({ message: "User not found!" });
-      return;
+      return 
     }
-    res.status(200).json({
-      message: "User fetched successfully",
-      user,
-    });
+    res.status(200).json({ message: "User fetch successfully", user });
   } catch (error) {
-    console.error("Failed to fetch user:", error);
+    console.error(error);
     res
       .status(500)
-      .json({ message: "An error occurred while fetching user", error });
+      .json({ message: "Error while fetching user details", error });
   }
 };
 
-export const updateAUser = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  const { id } = req.params;
+export const updateUserDetails = async (req:UserRequest, res:Response):Promise<void> => {
+  // const { email } = req.body;
   try {
-    const updatedUser = await User.findByIdAndUpdate(id, req.body, {
-      new: true,
-    });
-    if (!updatedUser) {
-      res.status(404).json({ message: "User not found!" });
-      return;
+    const user = await User.findById(req.user?.id);
+    if (!user) {
+       res.status(404).json({ message: "User not found!" });
+       return
     }
-    res.status(200).json({
-      message: "User updated successfully",
-      updatedUser,
+    // const isUserExists = await User.findOne({ email: email });
+    // if (isUserExists && email !== user.email) {
+    //   return res
+    //     .status(400)
+    //     .json({ message: "User is already exists, use another email address" });
+    // }
+
+    const updatedUser = await User.findByIdAndUpdate(req.user?.id, req.body, {
+      new: true,
+      runValidators: true,
     });
-  } catch (error) {
-    console.error("Failed to update user:", error);
     res
-      .status(500)
-      .json({ message: "An error occurred while updating user", error });
+      .status(200)
+      .json({ message: "User update successfully", user: updatedUser });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error while updating user", error });
   }
 };
 

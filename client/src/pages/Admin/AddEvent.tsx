@@ -3,10 +3,15 @@ import { useDropzone } from "react-dropzone";
 import useForm from "../../hooks/useForm";
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast"
+import { useAuth } from "../../context/AuthContext";
+import ButtonLoader from "../../components/ButtonLoader";
 
 
 const AddEvent = () => {
-  const { toast } = useToast()
+  const {userData} =useAuth();
+  console.log(userData);
+  const { toast } = useToast();
+  const [loading,setLoading] = useState<boolean>(false)
   const {
     values: eventData,
     resetForm,
@@ -32,8 +37,8 @@ const AddEvent = () => {
   // Handle form submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Event data : ", eventData);
-  
+    // console.log("Event data : ", eventData);
+    setLoading(true)
     // Validate date field
     if (!eventData.date) {
       console.error("Error: Date is required!");
@@ -41,6 +46,7 @@ const AddEvent = () => {
     }
   
     const formData = new FormData();
+    formData.append("userId", userData?._id || '');
     formData.append("title", eventData.title);
     formData.append("artist", eventData.artist);
     formData.append("date", new Date(eventData.date).toISOString());
@@ -111,9 +117,12 @@ const AddEvent = () => {
           className:'text-green-500'
         })
         resetForm();
+        setFile(null);
       }
     } catch (error) {
       console.error("Failed to create concert : ", error);
+    } finally{
+      setLoading(false);
     }
   };
 
@@ -392,7 +401,7 @@ const AddEvent = () => {
             type="submit"
             className="bg-black w-full text-white font-bold text-lg py-3 rounded-full my-5"
           >
-            Add Event
+            {loading ? <ButtonLoader/> : 'Add Event'}
           </button>
         </div>
       </form>

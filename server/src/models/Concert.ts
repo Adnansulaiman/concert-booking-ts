@@ -1,34 +1,41 @@
 // const mongoose = require("mongoose")
-import mongoose,{Schema,Document} from "mongoose";
+import mongoose, { Schema, Document, Types } from "mongoose";
 
 interface IConcert extends Document {
-    title:string,
-    artist:string,
-    date:Date,
-    time:string,
-    venue: {
-        name: string;
-        address: string;
-        city: string;
-        state: string;
-        country: string;
-        zipcode: string;
-    };
-    ticketTypes: {
-        type: 'General' | 'VIP' | 'VVIP';
-        price: number;
-        availableTickets: number;
-        totalTickets: number;
-    }[];
-    category: string;
-    description: string;
-    image: string;
-    // isFeatured: boolean;
-    // createdAt: Date;   
+  userId:Types.ObjectId
+  title: string;
+  artist: string;
+  date: Date;
+  time: string;
+  venue: {
+    name: string;
+    address: string;
+    city: string;
+    state: string;
+    country: string;
+    zipcode: string;
+  };
+  ticketTypes: {
+    type: "General" | "VIP" | "VVIP";
+    price: number;
+    availableTickets: number;
+    totalTickets: number;
+  }[];
+  category: string;
+  description: string;
+  image: string;
+  // isFeatured: boolean;
+  // createdAt: Date;
 }
 
 // Define the Mongoose schema
-const concertSchema = new Schema<IConcert>({
+const concertSchema = new Schema<IConcert>(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required:true
+    },
     title: { type: String, required: true, trim: true },
     artist: { type: String, required: true, trim: true },
     date: { type: Date, required: true },
@@ -43,7 +50,11 @@ const concertSchema = new Schema<IConcert>({
     },
     ticketTypes: [
       {
-        type: { type: String, enum: ["General", "VIP", "VVIP"], required: true },
+        type: {
+          type: String,
+          enum: ["General", "VIP", "VVIP"],
+          required: true,
+        },
         price: { type: Number, required: true },
         availableTickets: { type: Number, required: true, min: 0 },
         totalTickets: { type: Number, required: true, min: 1 },
@@ -52,7 +63,9 @@ const concertSchema = new Schema<IConcert>({
     category: { type: String, required: true },
     description: { type: String, required: true },
     image: { type: String },
-  }, { timestamps: true });
+  },
+  { timestamps: true }
+);
 
-const Concert = mongoose.model<IConcert>('Concert',concertSchema);
+const Concert = mongoose.model<IConcert>("Concert", concertSchema);
 export default Concert;

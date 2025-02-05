@@ -3,11 +3,13 @@ import { Response, Request } from "express";
 import fs from "fs";
 import cloudinary from "../config/cloudinary.config";
 import { UserRequest } from "../types/express";
+import User from "../models/User";
 
 //Create a concert , its only can admin
 export const createConcert = async (req: UserRequest, res: Response): Promise<void> => {
   console.log("Request Body:", req.body);
 console.log("Request File:", req.file);
+console.log("User ID in request body:", req.body.userId);
   try {
     const filePath = req.file ? req.file.path : "";
 
@@ -46,8 +48,8 @@ console.log("Request File:", req.file);
       return;
     }
 
-    // Create new concert
     const concert = new Concert({
+      userId: req.body.userId, // ADD THIS LINE
       title: req.body.title,
       artist: req.body.artist,
       date: req.body.date,
@@ -85,7 +87,24 @@ export const getAllConcerts = async (
       .json({ message: "An error occured while fetching concerts", error });
   }
 };
-
+//Fetch user concerts
+export const getUserConcert = async(req:UserRequest,res:Response) :Promise<void> => {
+  try{
+    const user = await User.findById(req.user?.id);
+    if(!user){
+      res.status(404).json({message:"User not found"});
+      return 
+    }
+    const concerts = await Concert.find({ userId: req.user?.id })
+    .sort({ createdAt: -1 });
+    res.status(200).json(concerts);
+  }catch(error){
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "An error occured while fetching user concerts", error });
+  }
+}
 //Fetch a concert details
 export const getAConcert = async (
   req: Request,

@@ -24,8 +24,9 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
 const Navbar = () => {
-  const { loggedIn, logout } = useAuth();
-  console.log(loggedIn);
+  const { loggedIn, logout,userData } = useAuth();
+  // console.log(userData);
+  // console.log(loggedIn);
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   //menu closing enable animation
@@ -108,11 +109,12 @@ const Navbar = () => {
               </div>
             ) : (
               <div className="flex gap-4">
-                <p>Adam</p>
+                {userData && <p>{userData.name}</p>}
                 <DropdownMenu>
                   <DropdownMenuTrigger>
                     <img
-                      src="https://t4.ftcdn.net/jpg/02/15/84/43/360_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg"
+                    
+                      src={userData?.image ? userData?.image : "https://t4.ftcdn.net/jpg/02/15/84/43/360_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg" }
                       alt=""
                       className="w-6 h-6 rounded-full"
                     />
