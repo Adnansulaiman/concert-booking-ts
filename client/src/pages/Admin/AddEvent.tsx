@@ -1,25 +1,122 @@
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import useForm from "../../hooks/useForm";
+import axios from "axios";
+import { useToast } from "@/hooks/use-toast"
+
 
 const AddEvent = () => {
-  const {values:eventData,resetForm,handleChange} = useForm({
-    title:'',
-    artist:'',
-    date:'',
-    time:'',
-    description:'',
-    category:'',
-    image:''
-
+  const { toast } = useToast()
+  const {
+    values: eventData,
+    resetForm,
+    handleChange,
+  } = useForm({
+    title: "",
+    artist: "",
+    date: "",
+    time: "",
+    description: "",
+    category: "",
+    venueName: "",
+    venueAddress: "",
+    venueCity: "",
+    venueState: "",
+    venueCountry: "",
+    venueZipcode: "",
+    ticketType: "General",
+    ticketPrice: "",
+    totalTickets: "",
   });
 
   // Handle form submit
-  const handleSubmit = (e:MouseEvent) =>{
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(eventData)
-    console.log(file)
-  }
+    console.log("Event data : ", eventData);
+  
+    // Validate date field
+    if (!eventData.date) {
+      console.error("Error: Date is required!");
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append("title", eventData.title);
+    formData.append("artist", eventData.artist);
+    formData.append("date", new Date(eventData.date).toISOString());
+    formData.append("time", eventData.time);
+    formData.append("description", eventData.description);
+    formData.append("category", eventData.category);
+  
+    // Venue Details
+    const venue = {
+      name: eventData.venueName,
+      address: eventData.venueAddress,
+      city: eventData.venueCity,
+      state: eventData.venueState,
+      country: eventData.venueCountry,
+      zipcode: eventData.venueZipcode,
+    };
+  
+    // Check if venue fields are empty
+    if (Object.values(venue).some(value => !value.trim())) {
+      console.error("Error: Missing venue details!", venue);
+      return;
+    }
+    formData.append("venue", JSON.stringify(venue)); // Venue as JSON string
+  
+    // Ticket Details
+    const ticketTypes = [
+      {
+        type: eventData.ticketType,
+        price: parseFloat(eventData.ticketPrice),
+        totalTickets: parseInt(eventData.totalTickets, 10),
+        availableTickets: parseInt(eventData.totalTickets, 10), // Add this line
+      }
+    ];
+  
+    // Validate ticket fields
+    if (!ticketTypes[0].type || isNaN(ticketTypes[0].price) || isNaN(ticketTypes[0].totalTickets)) {
+      console.error("Error: Invalid ticket data!", ticketTypes);
+      return;
+    }
+    formData.append("ticketTypes", JSON.stringify(ticketTypes)); // TicketTypes as JSON string
+  
+    // Image File
+    if (file) {
+      formData.append("image", file);
+    }
+  
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+  
+    try {
+      const token = localStorage.getItem("token");
+      console.log(token);
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_API}/concert/`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.data) {
+        console.log(response.data);
+        toast({
+          description: "Successfully created concert",
+          className:'text-green-500'
+        })
+        resetForm();
+      }
+    } catch (error) {
+      console.error("Failed to create concert : ", error);
+    }
+  };
+
   const [file, setFile] = useState<(File & { preview: string }) | null>(null);
 
   // Handle file drop (only one file allowed)
@@ -39,15 +136,19 @@ const AddEvent = () => {
     accept: { "image/*": [] }, // Accept only images
     maxFiles: 1, // Allow only one file
   });
+
   return (
     <div>
       <h1 className="text-3xl font-bold uppercase border-b pb-2 border-black">
         Add Event
       </h1>
-      <form onSubmit={handleSubmit} className="flex flex-col pt-8 gap-5 w-full ">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col pt-8 gap-5 w-full "
+      >
         <div className="flex w-full gap-5">
           <div className="flex flex-col gap-2 w-full">
-            <label htmlFor="" className="text-lg font-semibold">
+            <label htmlFor="" className="text-lg  font-semibold">
               Title
             </label>
             <input
@@ -125,7 +226,7 @@ const AddEvent = () => {
             name="category"
             className="bg-transparent border border-black py-2 rounded-full text-lg px-5 w-full"
             value={eventData.category}
-              onChange={handleChange}
+            onChange={handleChange}
           />
         </div>
         <div className="flex flex-col gap-2 w-full">
@@ -137,8 +238,10 @@ const AddEvent = () => {
               </label>
               <input
                 type="text"
-                name="name"
+                name="venueName"
                 className="bg-transparent border border-black py-2 rounded-full text-lg px-5 w-full"
+                value={eventData.venueName}
+                onChange={handleChange}
               />
             </div>
             <div className="flex flex-col gap-2 w-full">
@@ -147,8 +250,10 @@ const AddEvent = () => {
               </label>
               <input
                 type="text"
-                name="address"
+                name="venueAddress"
                 className="bg-transparent border border-black py-2 rounded-full text-lg px-5 w-full"
+                value={eventData.venueAddress}
+                onChange={handleChange}
               />
             </div>
           </div>
@@ -159,8 +264,10 @@ const AddEvent = () => {
               </label>
               <input
                 type="text"
-                name="city"
+                name="venueCity"
                 className="bg-transparent border border-black py-2 rounded-full text-lg px-5 w-full"
+                value={eventData.venueCity}
+                onChange={handleChange}
               />
             </div>
             <div className="flex flex-col gap-2 w-full">
@@ -169,8 +276,10 @@ const AddEvent = () => {
               </label>
               <input
                 type="text"
-                name="state"
+                name="venueState"
                 className="bg-transparent border border-black py-2 rounded-full text-lg px-5 w-full"
+                value={eventData.venueState}
+                onChange={handleChange}
               />
             </div>
             <div className="flex flex-col gap-2 w-full">
@@ -179,8 +288,10 @@ const AddEvent = () => {
               </label>
               <input
                 type="text"
-                name="country"
+                name="venueCountry"
                 className="bg-transparent border border-black py-2 rounded-full text-lg px-5 w-full"
+                value={eventData.venueCountry}
+                onChange={handleChange}
               />
             </div>
             <div className="flex flex-col gap-2 w-full">
@@ -189,8 +300,10 @@ const AddEvent = () => {
               </label>
               <input
                 type="number"
-                name="zip"
+                name="venueZipcode"
                 className="bg-transparent border border-black py-2 rounded-full text-lg px-5 w-full"
+                value={eventData.venueZipcode}
+                onChange={handleChange}
               />
             </div>
           </div>
@@ -207,9 +320,16 @@ const AddEvent = () => {
                 name="name"
                 className="bg-transparent border border-black py-2 rounded-full text-lg px-5 w-full"
               /> */}
-              <select name="type" id="" className="bg-transparent border border-black py-2 rounded-full text-lg px-5 w-full">
+              <select
+                name="ticketType"
+                id=""
+                value={eventData.ticketType}
+                onChange={handleChange}
+                className="bg-transparent border border-black py-2 rounded-full text-lg px-5 w-full"
+              >
                 <option value="general">General</option>
                 <option value="vip">VIP</option>
+                <option value="vip">WIP</option>
               </select>
             </div>
             <div className="flex flex-col gap-2 w-full">
@@ -218,8 +338,10 @@ const AddEvent = () => {
               </label>
               <input
                 type="number"
-                name="address"
+                name="ticketPrice"
                 className="bg-transparent border border-black py-2 rounded-full text-lg px-5 w-full"
+                value={eventData.ticketPrice}
+                onChange={handleChange}
               />
             </div>
             <div className="flex flex-col gap-2 w-full">
@@ -228,8 +350,10 @@ const AddEvent = () => {
               </label>
               <input
                 type="number"
-                name="state"
+                name="totalTickets"
                 className="bg-transparent border border-black py-2 rounded-full text-lg px-5 w-full"
+                value={eventData.totalTickets}
+                onChange={handleChange}
               />
             </div>
           </div>

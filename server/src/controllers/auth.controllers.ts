@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs';
 
 
 export const register = async(req:Request,res:Response):Promise<void> =>{
-    const {name,email,password} = req.body;
+    const {name,email,password,role} = req.body;
     try{
         //Check if user already exists
         const isExistingUser = await User.findOne({email});
@@ -20,17 +20,24 @@ export const register = async(req:Request,res:Response):Promise<void> =>{
         const newUser = new User({
             name,
             email,
-            password:hashedPassword
+            password:hashedPassword,
+            role
         })
         await newUser.save();
-        //Generate token
-        const data = {
-            user:{
-                id:newUser._id
-            }
-        }
-        const token = jwt.sign(data,process.env.JWT_SECRET_KEY as string,{expiresIn:'1d'})
-        res.status(201).json({ message: 'User registered successfully',token, newUser });
+        // //Generate token
+        // const data = {
+        //     user:{
+        //         id:newUser._id,
+        //         role:newUser.role
+        //     }
+        // }
+        const token = jwt.sign(
+            { 
+                id: newUser._id,
+                role: newUser.role // Ensure this is 'admin' for admin users
+              },
+            process.env.JWT_SECRET_KEY as string,{expiresIn:'1d'})
+        res.status(201).json({ message: 'User registered successfully',token, role:newUser.role });
     }catch(error){
         console.error("Failed to register user : ",error)
         res.status(500).json({message:"An error occured while Register user",error})
@@ -53,14 +60,20 @@ export const login = async(req:Request,res:Response):Promise<void> =>{
             return;
         }
 
-        //Generate token 
-        const data = {
-            user:{
-                id:user._id
-            }
-        }
-        const token = jwt.sign(data,process.env.JWT_SECRET_KEY as string,{expiresIn:'1d'});
-        res.status(200).json({message:"Login successfully",token})
+        // //Generate token 
+        // const data = {
+        //     user:{
+        //         id:user._id,
+        //         role:user.role
+        //     }
+        // }
+        const token = jwt.sign(
+            { 
+                id: user._id,
+                role: user.role // Ensure this is 'admin' for admin users
+              },
+            process.env.JWT_SECRET_KEY as string,{expiresIn:'1d'});
+        res.status(200).json({message:"Login successfully",token,role:user.role})
     }catch(error){
         console.error("Failed to login user : ",error);
         res.status(500).json({message:"An error occured while login user"})

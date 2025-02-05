@@ -4,7 +4,8 @@ import {Schema,model} from "mongoose";
 interface IUser {
     name:string,
     email:string,
-    password:string
+    password:string,
+    role:'user'| 'admin'
 }
 const userSchema =new Schema<IUser>({
     name:{
@@ -19,6 +20,7 @@ const userSchema =new Schema<IUser>({
         type:String,
         required:true
     },
+    role: { type: String, enum: ["user", "admin"], default: "user" }, // Role-based access
 })
 
 const User = model<IUser>('User',userSchema);

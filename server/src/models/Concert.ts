@@ -20,7 +20,7 @@ interface IConcert extends Document {
         availableTickets: number;
         totalTickets: number;
     }[];
-    categories: string[];
+    category: string;
     description: string;
     image: string;
     // isFeatured: boolean;
@@ -34,27 +34,25 @@ const concertSchema = new Schema<IConcert>({
     date: { type: Date, required: true },
     time: { type: String, required: true },
     venue: {
-        name: { type: String, required: true },
-        address: { type: String, required: true },
-        city: { type: String, required: true },
-        state: { type: String, required: true },
-        country: { type: String, required: true },
-        zipcode: { type: String, required: true }
+      name: { type: String, required: true },
+      address: { type: String, required: true },
+      city: { type: String, required: true },
+      state: { type: String, required: true },
+      country: { type: String, required: true },
+      zipcode: { type: String, required: true },
     },
     ticketTypes: [
-        {
-            type: { type: String, enum: ['General', 'VIP', 'VVIP'], required: true },
-            price: { type: Number, required: true },
-            availableTickets: { type: Number, required: true, min: 0 },
-            totalTickets: { type: Number, required: true, min: 1 }
-        }
+      {
+        type: { type: String, enum: ["General", "VIP", "VVIP"], required: true },
+        price: { type: Number, required: true },
+        availableTickets: { type: Number, required: true, min: 0 },
+        totalTickets: { type: Number, required: true, min: 1 },
+      },
     ],
-    categories: { type: [String], required: true },
+    category: { type: String, required: true },
     description: { type: String, required: true },
     image: { type: String },
-    // isFeatured: { type: Boolean, default: false },
-    // createdAt: { type: Date, default: Date.now }
-},{timestamps:true});
+  }, { timestamps: true });
 
 const Concert = mongoose.model<IConcert>('Concert',concertSchema);
 export default Concert;

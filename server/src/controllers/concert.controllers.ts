@@ -1,22 +1,72 @@
 import Concert from "../models/Concert";
 import { Response, Request } from "express";
+import fs from "fs";
+import cloudinary from "../config/cloudinary.config";
+import { UserRequest } from "../types/express";
 
 //Create a concert , its only can admin
-export const createConcert = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const createConcert = async (req: UserRequest, res: Response): Promise<void> => {
+  console.log("Request Body:", req.body);
+console.log("Request File:", req.file);
   try {
-    const concert = new Concert(req.body);
+    const filePath = req.file ? req.file.path : "";
+
+    if (!filePath) {
+      res.status(400).json({ message: "No image file provided" });
+      return;
+    }
+
+    // Upload image to Cloudinary
+    let imageUrl = "";
+    try {
+      console.log("Uploading to Cloudinary:", filePath);
+      const result = await cloudinary.uploader.upload(filePath, {
+        transformation: [{ quality: "auto", fetch_format: "auto" }],
+      });
+      imageUrl = result.secure_url;
+      fs.unlinkSync(filePath);
+    } catch (error) {
+      console.error("Cloudinary Upload Error:", error);
+      res.status(500).json({ message: "Failed to upload image" });
+      return;
+    }
+
+    // Parse venue and ticketTypes from JSON strings
+    let venue, ticketTypes;
+    try {
+      venue = JSON.parse(req.body.venue);
+      ticketTypes = JSON.parse(req.body.ticketTypes);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid venue or ticketTypes format" });
+      return;
+    }
+    // Validate required fields
+    if (!venue || !venue.name || !venue.address || !req.body.date) {
+      res.status(400).json({ message: "Missing required venue fields or date" });
+      return;
+    }
+
+    // Create new concert
+    const concert = new Concert({
+      title: req.body.title,
+      artist: req.body.artist,
+      date: req.body.date,
+      time: req.body.time,
+      description: req.body.description,
+      category: req.body.category,
+      venue: venue,
+      ticketTypes: ticketTypes,
+      image: imageUrl,
+    });
+
     await concert.save();
-    res.status(200).json({ message: "Successfully created concert", concert });
+    res.status(201).json({ message: "Concert created successfully", concert });
   } catch (error) {
-    console.error("Failed to create concert", error);
-    res
-      .status(500)
-      .json({ message: "An error occured while creating concert", error });
+    console.error("Failed to create concert:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
+
 
 //Fetching all concerts
 export const getAllConcerts = async (
@@ -99,13 +149,12 @@ export const deleteAConcert = async (
   }
 };
 
-
-// //Book a concert 
+// //Book a concert
 // export const bookAConcert = async(req:Request,res:Response):Promise<void> =>{
 //   const {concert_id,quantity} = req.body;
 //   try{
 //     const concert = await Concert.findById(concert_id);
-    
+
 //   }catch(error){
 //     console.error("Failed to book a concert : ",error);
 //     res.status(500).json({message:"An error occured while booking a concert",error});

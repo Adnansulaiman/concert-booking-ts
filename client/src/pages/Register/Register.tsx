@@ -23,6 +23,7 @@ const Register = () => {
     email: "",
     password: "",
     confirmPassword: "",
+    role:'user'
   });
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,7 +40,7 @@ const Register = () => {
         formData
       );
 
-      login(response.data.token)
+      login(response.data.token,response.data.role)
       
       // Show success message
       setSuccessMessage(response.data.message);

@@ -21,6 +21,7 @@ const Login = () => {
   } = useForm({
     email: "",
     password: "",
+    
   });
 
   const handleSubmit = async (e) => {
@@ -35,7 +36,7 @@ const Login = () => {
         formData
       );
       setSuccessMessage(response?.data?.message);
-      login(response.data.token)
+      login(response.data.token, response.data.role);
       // Reset form after successful registration
       resetForm();
       setTimeout(()=>{

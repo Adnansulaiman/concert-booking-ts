@@ -1,7 +1,8 @@
+import dotenv from 'dotenv';
+dotenv.config()
 // const express = require('express');
 // require('dotenv').config();
 import express,{Express,Response,Request} from 'express';
-import dotenv from 'dotenv';
 import connectDB from './config/db.config';
 import cors from 'cors';
 
@@ -9,8 +10,8 @@ import userRoutes from './routes/user.routes'
 import authRoutes from './routes/auth.routes'
 import concertRoutes from './routes/concert.routes'
 
-dotenv.config()
 
+console.log(process.env.CLOUD_API_KEY)
 const app:Express = express();
 const port = process.env.PORT || 3000;
 

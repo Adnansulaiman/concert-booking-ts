@@ -10,6 +10,7 @@ import Login from './pages/Login/Login'
 import Register from './pages/Register/Register'
 import AdminLayout from './pages/Admin/AdminLayout'
 import AddEvent from './pages/Admin/AddEvent'
+import { Toaster } from "@/components/ui/toaster"
 
 
 function App() {
@@ -32,7 +33,7 @@ function App() {
       </Route>
      </Routes>
      {!isAdminRoute && <Footer />} {/* Show Footer only if not on Admin route */}
-    
+     <Toaster />
      </div>
      
     </>

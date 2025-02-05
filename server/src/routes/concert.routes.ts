@@ -1,11 +1,14 @@
 import express from 'express';
 import { createConcert, deleteAConcert, getAConcert, getAllConcerts, updateAConcert } from '../controllers/concert.controllers';
+import { verifyUser,verifyAdmin } from '../middlewares/auth.middlware';
+import upload from '../middlewares/upload.middleware';
+
 const router = express.Router();
 
-router.post('/',createConcert);
-router.get('/',getAllConcerts);
-router.get('/:id',getAConcert);
-router.put('/:id',updateAConcert);
-router.delete('/:id',deleteAConcert);
+router.post('/',verifyUser,verifyAdmin,upload.single('image'),createConcert);
+router.get('/',verifyUser,getAllConcerts);
+router.get('/:id',verifyUser,getAConcert);
+router.put('/:id',verifyUser,verifyAdmin,updateAConcert);
+router.delete('/:id',verifyUser,verifyAdmin,deleteAConcert);
 
 export default router;
