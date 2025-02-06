@@ -34,25 +34,30 @@ export const AuthProvider = ({children}:{children:React.ReactNode}) =>{
             console.log(err)
         }
     }
-    // Automatically fetch user data if logged in on initial load
-    useEffect(() => {
-        if (loggedIn) {
-        const token = localStorage.getItem("token") as string;
-        getUserData(token).then((user) => {
-            setUserData(user); // Set user data when the app loads if logged in
-        });
-        }
-    }, [loggedIn]);
-
-    const login = (token:string,role:string) =>{
-        localStorage.setItem('token',token);
-        localStorage.setItem('role',role)
-        setLoggedIn(true)
+    // Check token expiration on load and remove expired token
+  useEffect(() => {
+    const tokenData = JSON.parse(localStorage.getItem("token") || "null");
+    if (tokenData && Date.now() > tokenData.expiry) {
+      logout();
+    } else if (tokenData) {
+      getUserData(tokenData.value).then((user) => {
+        setUserData(user);
+      });
     }
+  }, []);
+
+  const login = (token: string, role: string) => {
+    const expiryTime = Date.now() + 24 * 60 * 60 * 1000; // 1 day
+    localStorage.setItem("token", JSON.stringify({ value: token, expiry: expiryTime }));
+    localStorage.setItem("role", role);
+    setLoggedIn(true);
+  };
+
     const logout = () =>{
         localStorage.removeItem('token');
         localStorage.removeItem('role');
-        setLoggedIn(false)
+        setLoggedIn(false);
+        setUserData(null);
     }
 
     return (
@@ -69,3 +74,4 @@ export const useAuth = () => {
     }
     return context;
   };
+
