@@ -148,7 +148,7 @@ const AddEvent = () => {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold uppercase border-b pb-2 border-black">
+      <h1 className="text-3xl font-bold uppercas border-b pb-2 border-black">
         Add Event
       </h1>
       <form

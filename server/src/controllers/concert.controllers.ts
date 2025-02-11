@@ -49,7 +49,7 @@ console.log("User ID in request body:", req.body.userId);
     }
 
     const concert = new Concert({
-      userId: req.body.userId, // ADD THIS LINE
+      userId: req.body.userId, 
       title: req.body.title,
       artist: req.body.artist,
       date: req.body.date,
@@ -87,6 +87,7 @@ export const getAllConcerts = async (
       .json({ message: "An error occured while fetching concerts", error });
   }
 };
+
 //Fetch user concerts
 export const getUserConcert = async(req:UserRequest,res:Response) :Promise<void> => {
   try{

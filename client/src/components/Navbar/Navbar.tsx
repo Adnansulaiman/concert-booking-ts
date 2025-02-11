@@ -25,7 +25,7 @@ import {
 } from "../ui/alert-dialog";
 const Navbar = () => {
   const { loggedIn, logout,userData } = useAuth();
-  // console.log(userData);
+  console.log(userData);
   // console.log(loggedIn);
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);

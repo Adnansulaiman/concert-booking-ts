@@ -12,6 +12,7 @@ import AdminLayout from './pages/Admin/AdminLayout'
 import AddEvent from './pages/Admin/AddEvent'
 import { Toaster } from "@/components/ui/toaster"
 import AllEvents from './pages/Admin/AllEvents'
+import UpcomingEvent from './pages/Admin/UpcomingEvent'
 
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
       <Route path='/admin' element={<AdminLayout />} >
         <Route path='/admin/add-events' element={<AddEvent />} />
         <Route path='/admin/all-events' element={<AllEvents />} />
+        <Route path='/admin/upcoming-events' element={<UpcomingEvent />} />
       </Route>
      </Routes>
      {!isAdminRoute && <Footer />} {/* Show Footer only if not on Admin route */}

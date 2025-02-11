@@ -69,7 +69,7 @@ const AllEvents = () => {
   };
   return (
     <div>
-      <h1 className="text-3xl font-bold uppercase border-b pb-2 mb-10 border-black">
+      <h1 className="text-3xl font-bold uppercas border-b pb-2 mb-10 border-black">
         All Events
       </h1>
       {concertData ? (

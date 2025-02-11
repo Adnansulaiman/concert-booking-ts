@@ -8,6 +8,7 @@ import {
 } from '@ant-design/icons';
 import { Button, Layout, Menu, theme } from 'antd';
 import { Outlet, useNavigate } from 'react-router-dom';
+import { RxDashboard } from "react-icons/rx";
 
 const { Header, Sider, Content } = Layout;
 const { SubMenu } = Menu; // Import SubMenu
@@ -46,7 +47,7 @@ const AdminLayout = () => {
           onClick={({ key }) => handleMenuClick(key)} // Use the key to navigate
         >
           {/* Dashboard Menu Item */}
-          <Menu.Item key="1" icon={<UserOutlined />}>
+          <Menu.Item key="1" icon={<RxDashboard />}>
             Dashboard
           </Menu.Item>
 
