@@ -29,6 +29,7 @@ export const createUpcoming = async(req:Request,res:Response) =>{
               return;
             }
           const upcoming = new Upcoming({
+            userId:req.body.userId,
             title:req.body.title,
             image:imageUrl
           })

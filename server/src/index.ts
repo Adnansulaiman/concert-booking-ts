@@ -9,6 +9,7 @@ import cors from 'cors';
 import userRoutes from './routes/user.routes'
 import authRoutes from './routes/auth.routes'
 import concertRoutes from './routes/concert.routes'
+import upcomingRoutes from './routes/upcoming.routes'
 
 
 console.log(process.env.CLOUD_API_KEY)
@@ -26,6 +27,7 @@ connectDB();
 app.use('/api/user',userRoutes);
 app.use('/api/auth',authRoutes);
 app.use('/api/concert',concertRoutes);
+app.use('/api/upcoming',upcomingRoutes);
 
 app.get('/', (req:Request, res:Response) => {
   res.send('Express + TypeScript Server');
