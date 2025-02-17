@@ -13,6 +13,8 @@ import AddEvent from './pages/Admin/AddEvent'
 import { Toaster } from "@/components/ui/toaster"
 import AllEvents from './pages/Admin/AllEvents'
 import UpcomingEvent from './pages/Admin/UpcomingEvent'
+import Concert from './pages/Concert/Concert'
+import Error404 from './pages/Error404/Error404'
 
 
 function App() {
@@ -27,8 +29,10 @@ function App() {
       <Route path='/' element={<Home />} />
       <Route path='/about' element={<About />} />
       <Route path='/contact' element={<Contact />} />
+      <Route path='/concert' element={<Concert />} />
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
+      <Route path='*' element={<Error404/>} />
       {/* Admin Routes */}
       <Route path='/admin' element={<AdminLayout />} >
         <Route path='/admin/add-events' element={<AddEvent />} />
