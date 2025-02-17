@@ -15,6 +15,7 @@ import AllEvents from './pages/Admin/AllEvents'
 import UpcomingEvent from './pages/Admin/UpcomingEvent'
 import Concert from './pages/Concert/Concert'
 import Error404 from './pages/Error404/Error404'
+import SingleConcert from './pages/Concert/SingleConcert'
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
       <Route path='/about' element={<About />} />
       <Route path='/contact' element={<Contact />} />
       <Route path='/concerts' element={<Concert />} />
+      <Route path='/concerts/:id' element={<SingleConcert />} />
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
       <Route path='*' element={<Error404/>} />
