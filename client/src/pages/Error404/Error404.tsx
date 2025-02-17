@@ -5,11 +5,11 @@ import { BsArrowLeft } from "react-icons/bs";
 const Error404 = () => {
   return (
     <div className="bg-black font-sans text-white w-full h-screen flex flex-col gap-3  justify-center items-center">
-      <h1 className="text-9xl font-black">Oops!</h1>
-      <h3 className="uppercase text-2xl mt-10 font-bold">
+      <h1 className="text-8xl md:text-9xl font-black">Oops!</h1>
+      <h3 className="uppercase text-xl md:text-2xl mt-5 md:mt-10 font-bold">
         404 - page not found
       </h3>
-      <p className="text-lg max-w-xl text-center">
+      <p className="text-sm md:text-lg max-w-sm  md:max-w-xl text-center">
         The page you are looking for might have been removed had its name
         changed or is temporarily unavailable.
       </p>
